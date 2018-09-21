@@ -1,0 +1,3 @@
+Loading your questions.
+
+// ponerlo con un progress bar por 4 segundos
