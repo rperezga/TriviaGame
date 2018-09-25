@@ -42,6 +42,43 @@ button{
     width: 80%; 
 }
 
+#game{
+    width: 90%;
+    margin: 0 auto;
+}
+
+#game h2{
+    float:right;
+    margin-top: 50px;
+    margin-right: 80px;
+}
+
+#game button{
+    margin-top: 50px;
+}
+
+.menu-bar{
+    margin-top: 20px;
+} 
+
+.menu-bar img{
+    width: 150px;
+}
+
+
+.jumbotron{
+    margin-top: 30px;
+}
+
+.answer{
+    margin-left: 100px;
+}
+
+.answer:hover{
+    color: blue;
+    font-style: italic;
+}
+
 
 
 

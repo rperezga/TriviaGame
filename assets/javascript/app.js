@@ -1,11 +1,14 @@
 $(function () {
 
+    var name = '';
+    var category = '';
+
     var questions = [
         ['Which of these is a real variety of Yam?', 'Sandra', 'Amy', 'Jessica', 'Lucy', 'fruit', 4],
         ['Which of these is a type of apple?', 'Happy Delicious', 'Happy Tasty', 'Golden Tasty', 'Golden Delicious', 'fruit', 4],
         ['Which of these is actually a Vegetable?', 'Watermelon', 'Pear', 'Banana', 'Apple', 'fruit', 1],
         ['Which of these is not a common variety of Asparagus?', 'Purple', 'White', 'Red', 'Green', 'fruit', 3],
-        ['Which of these is not a variety of Avocado?', 'Bonny Lad', 'Bacon', 'Hass', 'Pinkerton', 'fruit', 1]
+        ['Which of these is not a variety of Avocado?', 'Bonny Lad', 'Bacon', 'Hass', 'Pinkerton', 'fruit', 1],
         ['Which of these is not a variety of melon?', 'Cantaloupe', 'Chantenay', 'Honeydew', 'Casaba', 'fruit', 2],
         ['Which of these is not a variety of Tomato?', 'Early Girl', 'Herald', 'Albert', 'Eurocross', 'fruit', 3],
         ['Which of these is not a variety of Turnip?', 'Green Globe', 'Bora', 'Golden Ball', 'Model White', 'fruit', 1],
@@ -56,11 +59,15 @@ $(function () {
 
     var intervalId;
     var progressBar = 0;
+    var intervalTimer
 
     $("#start").on("click", function () {
         $("#myWelcome").attr("hidden", true);
         $("#loading").attr("hidden", false);
-        intervalId = setInterval(increment, 200);
+        intervalId = setInterval(increment, 150);
+        name = $("#myName").val();
+        $("#showName").text(name);
+        category = $("#gameCategory option:selected").val();
     })
 
     function increment() {
@@ -70,17 +77,110 @@ $(function () {
         } else {
             $("#loading").attr("hidden", true);
             $("#game").attr("hidden", false);
+            game.start;
             clearInterval(intervalId);
         }
     }
 
     var game = {
-        
+        myQuestions: [],
+        questionCount: 0,
+        good: 0,
+        bad: 0,
+        timmer: 16,
+        category: '',
+
+        get start() {
+            while (this.myQuestions.length < 10) {
+                if (category === 'fruit') {
+                    var randomN = Math.floor(Math.random() * 20);
+                    if (this.myQuestions.indexOf(randomN) <= -1) {
+                        this.myQuestions.push(randomN);
+                    }
+                } else {
+                    var randomN = Math.floor(Math.random() * 20) + 20;
+                    if (this.myQuestions.indexOf(randomN) <= -1) {
+                        this.myQuestions.push(randomN);
+                    }
+                }
+            }
+            console.log(this.myQuestions)
+            this.nextQuestions;
+        },
+
+        get nextQuestions() {
+            console.log(questions[this.myQuestions[this.questionCount]][0])
+            $("#question").text(questions[this.myQuestions[this.questionCount]][0]);
+            $("#q1").text(questions[this.myQuestions[this.questionCount]][1]);
+            $("#q2").text(questions[this.myQuestions[this.questionCount]][2]);
+            $("#q3").text(questions[this.myQuestions[this.questionCount]][3]);
+            $("#q4").text(questions[this.myQuestions[this.questionCount]][4]);
+            $("#status").html('<img src="assets/images/find.png"  width="50%" />')
+            game.timmer = 30;
+            this.showTimer;
+        },
+
+        get showTimer() {
+            intervalTimer = setInterval(function () {
+                if (game.timmer > 0) {
+                    game.timmer = game.timmer - 1;
+                    $("#timmer").text(game.questionCount + 1 + ' of 10  ---  0 : ' + game.timmer)
+                } else {
+                    $(".correctAnswer").attr("hidden", false);
+                    $("#correctAnswer").text('The correct answer is: ' + questions[game.myQuestions[game.questionCount]][questions[game.myQuestions[game.questionCount]][6]]);
+                    $("#status").html('<img src="assets/images/bad.png"  width="50%" />');                    
+                }
+            }, 1000);
+
+
+            // var nextQuestion = setTimeout(function () {
+            //     clearInterval(intervalTimer);
+            //     game.questionCount = game.questionCount + 1;
+            //     game.nextQuestions;
+            //     clearInterval(nextQuestion);
+            //     $(".correctAnswer").attr("hidden", true);
+            // }, 3000);
+            // game.bad = game.bad + 1;
+
+
+        }
     }
 
+    $(".answer").on("click", function () {
+        clearInterval(intervalTimer);
+        $("#timmer").text('');
 
+        if (game.questionCount < 10) {
+            if ($(this).attr("value") == questions[game.myQuestions[game.questionCount]][6]) {
+                $(".correctAnswer").attr("hidden", true);
+                game.good = game.good + 1;
+                $("#status").html('<img src="assets/images/good.png"  width="50%" />');
+                var nextQuestion = setTimeout(function () {
+                    clearInterval(intervalTimer);
+                    game.questionCount = game.questionCount + 1;
+                    game.nextQuestions;
+                    clearInterval(nextQuestion);
+                }, 3000);
+            } else {
+                $(".correctAnswer").attr("hidden", false);
+                $("#correctAnswer").text('The correct answer is: ' + questions[game.myQuestions[game.questionCount]][questions[game.myQuestions[game.questionCount]][6]]);
+                $("#status").html('<img src="assets/images/bad.png"  width="50%" />');
+                var nextQuestion = setTimeout(function () {
+                    clearInterval(intervalTimer);
+                    game.questionCount = game.questionCount + 1;
+                    game.nextQuestions;
+                    clearInterval(nextQuestion);
+                    $(".correctAnswer").attr("hidden", true);
+                }, 3000);
+                game.bad = game.bad + 1;
+            }
 
-
+        } else {
+            console.log('El juego ya se acabo')
+            $("#result").attr("hidden", false);
+            $("#game").attr("hidden", true);
+        }
+    });
 
 
 
