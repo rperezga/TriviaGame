@@ -2,6 +2,9 @@ $(function () {
 
     var name = '';
     var category = '';
+    var intervalId;
+    var progressBar = 0;
+    var intervalTimer;
 
     var questions = [
         ['Which of these is a real variety of Yam?', 'Sandra', 'Amy', 'Jessica', 'Lucy', 'fruit', 4],
@@ -48,6 +51,7 @@ $(function () {
 
     $("#game").attr("hidden", true);
     $("#loading").attr("hidden", true);
+    $("#result").attr("hidden", true);
 
     $("#myName").keyup(function () {
         if ($("#myName").length > 0 && $("#myName").val() != '') {
@@ -55,11 +59,7 @@ $(function () {
         } else {
             $("#start").attr("disabled", true);
         }
-    })
-
-    var intervalId;
-    var progressBar = 0;
-    var intervalTimer
+    });
 
     $("#start").on("click", function () {
         $("#myWelcome").attr("hidden", true);
@@ -87,8 +87,7 @@ $(function () {
         questionCount: 0,
         good: 0,
         bad: 0,
-        timmer: 16,
-        category: '',
+        timmer: 5,
 
         get start() {
             while (this.myQuestions.length < 10) {
@@ -104,20 +103,29 @@ $(function () {
                     }
                 }
             }
-            console.log(this.myQuestions)
             this.nextQuestions;
         },
 
         get nextQuestions() {
-            console.log(questions[this.myQuestions[this.questionCount]][0])
-            $("#question").text(questions[this.myQuestions[this.questionCount]][0]);
-            $("#q1").text(questions[this.myQuestions[this.questionCount]][1]);
-            $("#q2").text(questions[this.myQuestions[this.questionCount]][2]);
-            $("#q3").text(questions[this.myQuestions[this.questionCount]][3]);
-            $("#q4").text(questions[this.myQuestions[this.questionCount]][4]);
-            $("#status").html('<img src="assets/images/find.png"  width="50%" />')
-            game.timmer = 30;
-            this.showTimer;
+            if (game.questionCount < 10) {
+                console.log(questions[this.myQuestions[this.questionCount]][0])
+                $("#question").text(questions[this.myQuestions[this.questionCount]][0]);
+                $("#q1").text(questions[this.myQuestions[this.questionCount]][1]);
+                $("#q2").text(questions[this.myQuestions[this.questionCount]][2]);
+                $("#q3").text(questions[this.myQuestions[this.questionCount]][3]);
+                $("#q4").text(questions[this.myQuestions[this.questionCount]][4]);
+                $("#status").html('<img src="assets/images/find.png"  width="50%" />')
+                game.timmer = 5;
+                this.showTimer;
+            }else{
+                $("#result").attr("hidden", false);
+                $("#game").attr("hidden", true);
+                $("#winning").text('Good: ' + this.good);
+                $("#losser").text('Bad: ' + this.bad);
+                progressBar = 0;
+                $(".progress-bar").attr('style', 'width: ' + progressBar + '%');
+                clearInterval(intervalId);
+            }            
         },
 
         get showTimer() {
@@ -126,23 +134,25 @@ $(function () {
                     game.timmer = game.timmer - 1;
                     $("#timmer").text(game.questionCount + 1 + ' of 10  ---  0 : ' + game.timmer)
                 } else {
-                    $(".correctAnswer").attr("hidden", false);
-                    $("#correctAnswer").text('The correct answer is: ' + questions[game.myQuestions[game.questionCount]][questions[game.myQuestions[game.questionCount]][6]]);
-                    $("#status").html('<img src="assets/images/bad.png"  width="50%" />');                    
+                    if (game.questionCount < 10) {
+                        $(".correctAnswer").attr("hidden", false);
+                        $("#correctAnswer").text('You run out of time. The correct answer is: ' + questions[game.myQuestions[game.questionCount]][questions[game.myQuestions[game.questionCount]][6]]);
+                        $("#status").html('<img src="assets/images/bad.png"  width="50%" />');
+                        clearInterval(intervalTimer);
+                        var nextQuestion = setTimeout(function () {
+                            game.questionCount = game.questionCount + 1;
+                            game.nextQuestions;
+                            clearInterval(nextQuestion);
+                            $(".correctAnswer").attr("hidden", true);
+                        }, 1500);
+                        game.bad = game.bad + 1;
+                    } else {
+                        console.log('El juego ya se acabo')
+                        $("#result").attr("hidden", false);
+                        $("#game").attr("hidden", true);
+                    }
                 }
             }, 1000);
-
-
-            // var nextQuestion = setTimeout(function () {
-            //     clearInterval(intervalTimer);
-            //     game.questionCount = game.questionCount + 1;
-            //     game.nextQuestions;
-            //     clearInterval(nextQuestion);
-            //     $(".correctAnswer").attr("hidden", true);
-            // }, 3000);
-            // game.bad = game.bad + 1;
-
-
         }
     }
 
@@ -160,28 +170,52 @@ $(function () {
                     game.questionCount = game.questionCount + 1;
                     game.nextQuestions;
                     clearInterval(nextQuestion);
-                }, 3000);
+                }, 1500);
             } else {
                 $(".correctAnswer").attr("hidden", false);
                 $("#correctAnswer").text('The correct answer is: ' + questions[game.myQuestions[game.questionCount]][questions[game.myQuestions[game.questionCount]][6]]);
                 $("#status").html('<img src="assets/images/bad.png"  width="50%" />');
+                clearInterval(intervalTimer);
                 var nextQuestion = setTimeout(function () {
-                    clearInterval(intervalTimer);
                     game.questionCount = game.questionCount + 1;
                     game.nextQuestions;
                     clearInterval(nextQuestion);
                     $(".correctAnswer").attr("hidden", true);
-                }, 3000);
+                }, 1500);
                 game.bad = game.bad + 1;
             }
-
-        } else {
-            console.log('El juego ya se acabo')
-            $("#result").attr("hidden", false);
-            $("#game").attr("hidden", true);
         }
     });
 
+    $("#restart").on("click", function(){
+        $("#result").attr("hidden", true);
+        $("#loading").attr("hidden", false);        
+        intervalId = setInterval(increment, 150); 
+        reset();       
+    });
 
+    function reset() {
+        game.good = 0;
+        game.bad = 0;
+        game.myQuestions = [];
+        game.questionCount = 0;        
+        category = $("#newGameCategory option:selected").val();
+        game.start;
+        clearInterval(intervalTimer);
+    }
+
+    $("#exit").on("click", function(){
+        $("#myWelcome").attr("hidden", false);
+        $("#loading").attr("hidden", true);
+        $("#game").attr("hidden", true);
+        $("#result").attr("hidden", true);
+        game.good = 0;
+        game.bad = 0;
+        game.myQuestions = [];
+        game.questionCount = 0;        
+        category = $("#newGameCategory option:selected").val();
+        $("#myName").val('');
+        clearInterval(intervalTimer);
+    });
 
 })

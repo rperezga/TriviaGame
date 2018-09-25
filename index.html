@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Trivia by Roger</title>
+
+    <link rel="shortcut icon" href="assets/images/triviaIcon.png">
 
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -43,7 +45,6 @@
         <button id="start" class="btn btn-success" disabled>Star Game</button>
     </div>
 
-
     <div id="loading">
         <img src="assets/images/trivia.png" alt="Trivia logo" id="welcomeImg">
 
@@ -54,7 +55,6 @@
         </div>
     </div>
 
-
     <div id="game">
         <div class="row">
             <div class="col-lg-4">
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <button id="start" class="btn btn-primary" style="float: right;">Exit</button>
+                <button id="exit" class="btn btn-primary" style="float: right;">Exit</button>
                 <h2>Hello: <strong id="showName"></strong></h2>
             </div>
         </div>
@@ -93,7 +93,7 @@
 
     </div>
 
-    <!-- <div id="result">
+    <div id="result">
 
         <div class="row">
             <div class="col-lg-4">
@@ -102,16 +102,36 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <button id="start" class="btn btn-primary" style="float: right;">Exit</button>
+                <button id="exit" class="btn btn-primary" style="float: right;">Exit</button>
                 <h2>Hello: <strong id="showName"></strong></h2>
             </div>
         </div>
 
         <div class="jumbotron shadow-lg">
-
-            
+            <h1>You finished!!</h1>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h2 id="winning"></h2>
+                </div>
+                <div class="col">
+                    <h2 id="losser"></h2>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <div class="forName">
+                    <select class="form-control" id="newGameCategory">
+                        <option value="fruit">Fruits and Vegi</option>
+                        <option value="art">Art</option>
+                    </select>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button id="restart" class="btn btn-danger">Play again</button>
+            </div>
         </div>
-    </div> -->
+    </div>
 
 
 

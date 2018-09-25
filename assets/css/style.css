@@ -57,6 +57,21 @@ button{
     margin-top: 50px;
 }
 
+#result{
+    width: 90%;
+    margin: 0 auto;
+}
+
+#result h2{
+    float:right;
+    margin-top: 50px;
+    margin-right: 80px;
+}
+
+#result button{
+    margin-top: 50px;
+}
+
 .menu-bar{
     margin-top: 20px;
 } 
