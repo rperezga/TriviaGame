@@ -87,7 +87,7 @@ $(function () {
         questionCount: 0,
         good: 0,
         bad: 0,
-        timmer: 5,
+        timmer: 16,
 
         get start() {
             while (this.myQuestions.length < 10) {
@@ -115,7 +115,7 @@ $(function () {
                 $("#q3").text(questions[this.myQuestions[this.questionCount]][3]);
                 $("#q4").text(questions[this.myQuestions[this.questionCount]][4]);
                 $("#status").html('<img src="assets/images/find.png"  width="50%" />')
-                game.timmer = 5;
+                game.timmer = 16;
                 this.showTimer;
             }else{
                 $("#result").attr("hidden", false);
